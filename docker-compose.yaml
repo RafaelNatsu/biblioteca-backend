@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: 'Dockerfile'
+      target: '${TARGET}' # <dev||production>
+    ports:
+      - '${BACKEND_PORT}:${BACKEND_PORT}'
+    env_file: 
+      - '.env'
+    volumes:
+      - './:/app'
+      - '/app/node_modules'
+    depends_on:
+      - database
+      - redis
+    networks:
+      - biblioteca_network_backend
+
+  database:
+    image: 'postgres'
+    restart: 'always'
+    ports:
+      - '${DATABASE_PORT}:${DATABASE_PORT}'
+    env_file:
+      - '.env'
+    environment:
+      POSTGRES_USER: '${DATABASE_USER_NAME}'
+      POSTGRES_PASSWORD: '${DATABASE_PASSWORD}'
+      POSTGRES_DB: '${DATABASE_NAME}'
+    volumes:
+      - 'pgdata:/var/lib/postgresql/data'
+    networks:
+      - biblioteca_network_backend
+
+  redis:
+    image: 'redis'
+    ports:
+      - '${REDIS_PORT}:${REDIS_PORT}'
+    env_file:
+      - '.env'
+    volumes:
+      - 'redisData:/data'
+    command: 'redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}'
+    networks:
+      - biblioteca_network_backend
+
+volumes:
+  pgdata:
+    driver: local
+  redisData:
+    driver: local
+
+networks:
+  biblioteca_network_backend:
+    driver: bridge
