@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { RouterModule } from '@nestjs/core';
 import { ObrasModule } from './obras/obras.module';
 import { AutoresModule } from './autores/autores.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
     imports: [
@@ -17,6 +18,10 @@ import { AutoresModule } from './autores/autores.module';
                 module: AutoresModule,
             },
         ]),
+        ThrottlerModule.forRoot([{
+            ttl: 60000,
+            limit: 10,
+          }]),
         ObrasModule,
         AutoresModule,
     ],
