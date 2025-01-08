@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RouterModule } from '@nestjs/core';
 import { ObrasModule } from './obras/obras.module';
+import { AutoresModule } from './autores/autores.module';
 
 @Module({
     imports: [
@@ -11,8 +12,13 @@ import { ObrasModule } from './obras/obras.module';
                 path: 'obras',
                 module: ObrasModule,
             },
+            {
+                path: 'autores',
+                module: AutoresModule,
+            },
         ]),
         ObrasModule,
+        AutoresModule,
     ],
     controllers: [AppController],
     providers: [AppService],
