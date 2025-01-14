@@ -1,26 +1,35 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { CreateAutorDto } from './dto/create-autor.dto';
 import { UpdateAutorDto } from './dto/update-autor.dto';
+import { Repository } from 'typeorm';
+import { Autor } from './entities/autor.entity';
 
 @Injectable()
 export class AutoresService {
-    create(createAutoreDto: CreateAutorDto) {
-        return 'This action adds a new autore';
+    constructor(
+        @Inject('AUTOR_REPOSITORY')
+        private readonly autorRepository: Repository<Autor>,
+    ) {}
+
+    async create(createAutoreDto: CreateAutorDto): Promise<Autor> {
+        const autor = this.autorRepository.create(createAutoreDto);
+        return this.autorRepository.save(autor);
     }
 
-    findAll() {
-        return `This action returns all autores`;
+    async findAll(): Promise<Autor[]> {
+        return this.autorRepository.find();
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} autore`;
+    async findOne(id: number): Promise<Autor | null> {
+        return this.autorRepository.findOneBy({ id });
     }
 
-    update(id: number, updateAutoreDto: UpdateAutorDto) {
-        return `This action updates a #${id} autore`;
+    async update(id: number, updateAutoreDto: UpdateAutorDto): Promise<Autor | null> {
+        await this.autorRepository.update(id, updateAutoreDto);
+        return this.autorRepository.findOneBy({ id });
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} autore`;
+    async remove(id: number): Promise<void> {
+        await this.autorRepository.delete(id);
     }
 }

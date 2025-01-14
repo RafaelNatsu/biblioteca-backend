@@ -7,14 +7,14 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     app.setGlobalPrefix('v1');
     app.enableVersioning({
-        type: VersioningType.URI
+        type: VersioningType.URI,
     });
 
     const config = new DocumentBuilder()
-    .setTitle('Biblioteca backend')
-    .setDescription('Sistema de gerenciamento de biblioteca')
-    .setVersion('v1')
-    .build();
+        .setTitle('Biblioteca backend')
+        .setDescription('Sistema de gerenciamento de biblioteca')
+        .setVersion('v1')
+        .build();
     const documentFactory = () => SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, documentFactory);
 
