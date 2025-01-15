@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateAutorDto } from './dto/create-autor.dto';
 import { UpdateAutorDto } from './dto/update-autor.dto';
 import { Repository } from 'typeorm';
@@ -24,7 +24,10 @@ export class AutoresService {
         return this.autorRepository.findOneBy({ id });
     }
 
-    async update(id: number, updateAutoreDto: UpdateAutorDto): Promise<Autor | null> {
+    async update(
+        id: number,
+        updateAutoreDto: UpdateAutorDto,
+    ): Promise<Autor | null> {
         await this.autorRepository.update(id, updateAutoreDto);
         return this.autorRepository.findOneBy({ id });
     }
